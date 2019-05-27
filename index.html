@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" href="https://cdn.rawgit.com/jgthms/minireset.css/master/minireset.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:400,500,700,900">
+    <link rel="stylesheet" href="style.css">
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.5.16/dist/vue.js"></script>
+   
+    <title>test 04</title>
+</head>
+<body> 
+
+    <div id="app">
+        <div class="container">
+            <boardside :class="bsclass[0]" :subs="subs" :ver="subs"></boardside> <!-- цифры слева -->
+            <boardside :class="bsclass[1]" :subs="subs" :ver="subs"></boardside> <!-- цифры справа -->
+            <boardside :class="bsclass[2]" :subs="subs" :ver="!subs"></boardside> <!-- буквы сверху -->
+            <boardside :class="bsclass[3]" :subs="subs" :ver="!subs"></boardside> <!-- буквы снизу -->
+            <div class="board">
+                <!-- игровое поле -->
+                <div class="boardgrid">
+                    <div v-for="(cell, index) in cells" :style="colorize(cell, index)" @click=" colorTurns(index)"></div>   
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        "use strict"
+
+        // компонент вывода координат поля (сверху и снизу - буквы, справа и слева - числа)
+        Vue.component("boardside", {
+            props: ["subs", "ver"], 
+            template: `
+                <div>
+                    <div v-if="ver" class="vergrid">
+                        <div v-for="(sub, index) in subs">{{index+1}}</div>
+                    </div>
+                    <div v-else class="horgrid">
+                        <div v-for="sub in subs">{{sub}}</div>
+                    </div>
+                </div>
+        	`
+        })
+
+        var app = new Vue({
+            el: "#app",
+            data: {
+                bsclass: ["left","right","up","down"],
+                subs: 'ABCDEFGH',
+                cells: [,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,],
+                cats: [1,2,3]
+            },
+            methods: {
+                // по индексу клетки выясняем как ее окрасить
+                colorize(cell,index) {
+                    return {
+                        background: this.findcolor(cell,index)
+                    }
+                },
+                // проверка является ли кнопка нажатой или потенциальным ходом коня - окраска клетки
+                findcolor(cell,index) {
+                    if (cell == 1) {
+                        return "green";
+                    } else if (cell == 2) {
+                        return "blue";
+                    } else {
+                        // по умолчанию клетка либо белая либо черная
+                        return this.color(index);
+                    }
+                },
+                // по индексу клетки - черная или белая
+                color(index) {
+                    // координаты клетки через индекс
+                    let x = (index)%8+1;
+                    let y = (index+1-x)/8+1;
+                    // если сумма координат клетки - четная, то цвет - черный
+			        return (x+y)%2==0 ? "black" : "white";    
+		        },
+                generateTurns(x,y,a,b) {
+                    // вычисляем и передаем координаты ячейки для 4 из восьми ходов конем
+                    if ((x-a) > 0 && (y+b) < 9) { this.XYtoIndex(x-a,y+b) };
+                    if ((x-a) > 0 && (y-b) > 0) { this.XYtoIndex(x-a,y-b) };
+                    if ((x+a) < 9 && (y+b) < 9) { this.XYtoIndex(x+a,y+b) };
+                    if ((x+a) < 9 && (y-b) > 0) { this.XYtoIndex(x+a,y-b) };                    
+                },
+                fullGenerate(index) {
+                    // координаты x,y нажатой клетки от индекса клетки
+                    let x = (index)%8+1;
+                    let y = (index+1-x)/8+1;
+                    this.generateTurns(x,y,2,1);
+                    this.generateTurns(x,y,1,2);       
+                },
+                XYtoIndex(x,y) {
+                    // меняем значение ячейки массива по индексу, вычисляемому по координатам клетки
+                    Vue.set(this.cells, (y - 1) * 8 + x - 1, 2)
+                },
+                colorTurns(index) {
+                    // очистим старые ходы
+                    for (let i = 0; i < this.cells.length; i++) {
+                        this.cells[i] = 0;
+                        Vue.set(this.cells, i, 0);
+                    };
+                    // назначем цвет нажатой кнопке
+                    Vue.set(this.cells, index, 1)
+                    // вычисляем ходы конем
+                    this.fullGenerate(index);
+                }
+            }
+        })
+
+    </script>
+    
+</body>
+</html>

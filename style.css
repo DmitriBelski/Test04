@@ -1,0 +1,74 @@
+html, body {
+  background-color: #ffeead;
+  height: 100%;
+  padding: 10px;
+  margin: 0px;
+  display:flex;
+  justify-content: center;
+  align-items: center;
+}
+
+#app {
+  background-color: white;
+  border: solid 1px black;
+}
+
+.board {
+  border: solid 1px black;
+}
+
+.container {
+  height: 620px;
+  width: 620px;
+  display: grid;
+  grid-gap: 2px;
+  grid-template-columns: 60px 496px 60px;
+  grid-template-rows: 60px 496px 60px;
+  grid-template-areas: 
+      ". u ."
+      "r b l"
+      ". d .";
+}
+
+.up {grid-area: u;}
+.right {grid-area: r;}
+.left {grid-area: l;}
+.down {grid-area: d;}
+.board {grid-area: b;}
+
+div:not([id]):not([class]) {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 2em;
+  color: black;
+  
+}
+
+.horgrid {
+  height: 60px;
+  width: 494px;
+  display: grid;
+  grid-gap: 2px;
+  grid-template-columns: repeat(8, 1fr);
+}
+
+.vergrid {
+  height: 494px;
+  width: 60px;
+  display: grid;
+  grid-gap: 2px;
+  grid-template-rows: repeat(8, 1fr);
+}
+
+.boardgrid {
+  height: 494px;
+  width: 494px;
+  display: grid;
+  grid-gap: 2px;
+  grid-template: repeat(8, 1fr) / repeat(8, 1fr);
+}
+
+.container > div {
+  background-color: #ffffff;	
+}
