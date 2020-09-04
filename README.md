@@ -1,8 +1,8 @@
-# Test04
-На шахматной доске - возможные ходы конем. HTML, CSS, Vue.js
+# knight_move_test
 
-Для запуска:
-- скачать index.html, style.css в общую папку
-- открыть index.html в visual studio code 
-- Open with Live Server (Alt+L Alt+O)
+Тестовое задание на HTML, CSS, Vue.js </br>
+Возможные ходы конем на шахматной доске </br>
+Нажми на клетку, чтобы увидеть результат
+
+Online [DEMO](https://DmitriBelski.github.io/knight_move_test)
 
